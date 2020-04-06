@@ -2,7 +2,6 @@ package org.fc.bed;
 
 import java.awt.Rectangle;
 import java.awt.Toolkit;
-import java.awt.event.MouseWheelEvent;
 //import java.awt.event.KeyEvent;
 import java.io.EOFException;
 import java.io.File;
@@ -175,6 +174,12 @@ public class FileEditorPane extends BorderPane {
 		currentRecordStatus = EXISTING;
 		view.recalculateSize();
 		refresh();
+		System.out.println("open: "+model.size());
+		if (!readOnly && model.size()==0)
+		{
+			insertRecord(false, 1);
+			resetControls();
+		}
 		refreshStatusBar();
 	}
 
@@ -284,14 +289,19 @@ public class FileEditorPane extends BorderPane {
 		}
 	}
 
+	
 	public boolean insertRecord(boolean above) {
-		// RecordKey rk=acceptRecordKey();
+		return insertRecord(above, view.getCurrentIndex() + (above ? 1 : 2));
+	}
+	
+	public boolean insertRecord(boolean above, int pos) {
+				// RecordKey rk=acceptRecordKey();
 		releaseCurrentRecord();
 		Record r = createEmptyRecord(above);
 		if (r == null)
 			return false;
 
-		model.insertRecord(r, view.getCurrentIndex() + (above ? 1 : 2));
+		model.insertRecord(r, pos);
 		if (df instanceof FlatFile) {
 			model.renum();
 		}
@@ -627,11 +637,7 @@ public class FileEditorPane extends BorderPane {
 		findOccurrence(true);
 	}
 
-	public void doReplace(boolean forward) {
-		boolean all = false;
-		boolean replace = (replaceWith != null);
-	}
-
+	
 	public boolean findOccurrence(boolean forward) {
 		// System.out.println("cerco in "+(forward?"avanti":"indietro"));
 		if (findWhat == null) {
@@ -840,9 +846,9 @@ public class FileEditorPane extends BorderPane {
 			try {
 				Clipboard clipboard = Clipboard.getSystemClipboard();
 				ClipboardContent content = new ClipboardContent();
+				content.putString(s);
 				clipboard.setContent(content);
-				// Display.resetSelectedText();
-				// resetSelection();
+				resetSelection();
 			} catch (AccessControlException e) {
 				FXDialog.errorBox(parent, e);
 			}
@@ -871,7 +877,7 @@ public class FileEditorPane extends BorderPane {
 
 	public void cutSelection() {
 		if (hasSelection()) {
-			Record r = (Record) model.get((int) selection.getY());
+			//Record r = (Record) model.get((int) selection.getY());
 			int b = (int) selection.getX();
 			int w = (int) selection.getWidth();
 			cursorAtIndex(b + 1, (int) selection.getY());
@@ -886,7 +892,6 @@ public class FileEditorPane extends BorderPane {
 	}
 
 	public int getReplaceMode() {
-
 		Alert dialog = new Alert(AlertType.CONFIRMATION);
 		dialog.setTitle(messages.getString("dialog.replace.mode.title"));
 		dialog.setHeaderText(messages.getString("dialog.replace.mode.header"));
@@ -908,6 +913,11 @@ public class FileEditorPane extends BorderPane {
 		} else {
 			return MODE_CANCEL;
 		}
+	}
+
+	public void resetControls() {
+		view.cursorHome();
+		resetSelection();
 	}
 
 	private void beep() {
@@ -1013,7 +1023,7 @@ public class FileEditorPane extends BorderPane {
 				logger.info("mouse click "+evt);
 				logger.info("click count "+evt.getClickCount());
 				logger.info("still "+evt.isStillSincePress());
-				if (evt.getClickCount() == 1 && evt.isStillSincePress()) {
+				if (evt.getClickCount() == 1) {
 					selection = null;
 					((App) parent).setMenuState();
 					selecting = false;
@@ -1031,11 +1041,11 @@ public class FileEditorPane extends BorderPane {
 		this.setOnMouseReleased(new EventHandler<MouseEvent>() {
 			@Override
 			public void handle(MouseEvent evt) {
-				logger.info(getClass().getName()+"+mouse release "+evt);
+				logger.info(getClass().getName()+"+mouse released "+evt);
 				if (selection == null)
 					return;
 				int w = ((int)(evt.getX()) / view.getCharWidth()) - (int) selection.getX() + 1;
-				int h = ((int)(evt.getY()) / view.getCharHeight()) - (int) selection.getY() + 1;
+				//int h = ((int)(evt.getY()) / view.getCharHeight()) - (int) selection.getY() + 1;
 				if (view.getShowRecordNumber()) {
 					w -= 9;
 				}
@@ -1054,7 +1064,7 @@ public class FileEditorPane extends BorderPane {
 			// TODO: fai funzionare la selezione
 			@Override
 			public void handle(MouseEvent evt) {
-				logger.info(getClass().getName()+"+mouse drag "+evt);
+				//logger.info(getClass().getName()+"+mouse drag "+evt);
 				int nx = ((int)evt.getX()) / view.getCharWidth();
 				int ny = ((int)evt.getY()) / view.getCharHeight();
 				if (view.getShowRecordNumber()) {

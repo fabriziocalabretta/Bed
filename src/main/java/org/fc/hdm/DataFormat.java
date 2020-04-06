@@ -5,7 +5,6 @@ import java.io.StringWriter;
 
 public class DataFormat {
 	public static long getPacked(byte[] bytes, int offset, int len) {
-		int rc;
 		StringBuffer b = new StringBuffer();
 		for (int i = 0; i < len; i++) {
 			String s = Integer.toHexString(byte2int(bytes[offset + i]));

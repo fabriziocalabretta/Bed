@@ -6,10 +6,6 @@ import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.Rectangle;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 import java.text.DecimalFormat;
 
 import javax.swing.JPanel;
@@ -21,6 +17,8 @@ import org.fc.io.Record;
 import org.fc.utils.ByteConverter;
 
 public class EditorView extends JPanel implements EditorModelListener {
+	private static final long serialVersionUID = 1L;
+
 	public final static int AREA_CHAR = 0;
 	public final static int AREA_HEX1 = 1;
 	public final static int AREA_HEX2 = 2;

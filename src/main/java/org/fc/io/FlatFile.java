@@ -15,7 +15,7 @@ public class FlatFile extends DataFile {
 	byte[] ioBuffer;
 	RandomAccessFile raf;
 	String[] modes = { "r", "w", "rw" };
-	protected LinkedList index;
+	protected LinkedList<Object> index;
 	protected int pointer = 0;
 	protected int recordLength;
 
@@ -37,7 +37,7 @@ public class FlatFile extends DataFile {
 	public void open(int mode) throws IOException {
 		recordLength = fileInfo.getMaxRecordLength();
 		ioBuffer = new byte[recordLength];
-		index = new LinkedList();
+		index = new LinkedList<Object>();
 		pointer = 0;
 		located = false;
 		openMode = mode;
@@ -73,7 +73,7 @@ public class FlatFile extends DataFile {
 					throw new IOException("operation cancelled by user");
 				}
 			}
-			index.add(new Long(rba));
+			index.add(Long.valueOf(rba));
 		}
 		System.out.println("fine " + new Date());
 	}
@@ -188,7 +188,7 @@ public class FlatFile extends DataFile {
 
 		File f = new File(tmp);
 		FileOutputStream out = new FileOutputStream(f);
-		ListIterator li = index.listIterator();
+		ListIterator<Object> li = index.listIterator();
 		while (li.hasNext()) {
 			Object o = li.next();
 			byte[] v;

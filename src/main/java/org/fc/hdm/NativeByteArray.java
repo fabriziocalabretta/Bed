@@ -227,10 +227,15 @@ public class NativeByteArray implements GenericByteArray {
 			throw new ArrayIndexOutOfBoundsException();
 	}
 
+	@SuppressWarnings("deprecation")
 	protected void finalize() throws Throwable {
-		System.out.println("finalized");
-		free();
-		super.finalize();
+		try
+		{
+			System.out.println("finalized");
+			free();
+		} finally {
+			super.finalize();
+		}
 	}
 
 	public void fill(int offset, int len, byte filler) {

@@ -10,7 +10,6 @@ import java.util.ResourceBundle;
 import java.util.function.UnaryOperator;
 
 import javafx.application.Platform;
-import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.control.ButtonBar;
 import javafx.scene.control.ButtonType;
@@ -203,7 +202,9 @@ public class FileDialog extends Dialog<OpenFileCommand> {
 		lvFiles=new ListView<String>();
 		lvFiles.getSelectionModel().selectedItemProperty().addListener((obs, oldsel, newsel) ->{
 			if (newsel!=null) {
-				tfFilename.setText(newsel);
+				FileTreeItem fti=(FileTreeItem) tvDirectoryTree.getSelectionModel().getSelectedItem();
+				File f=new File(fti.getFile(), newsel);
+				tfFilename.setText(f.getAbsolutePath());
 			}
 		});
 	}

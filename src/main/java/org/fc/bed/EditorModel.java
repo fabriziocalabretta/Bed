@@ -8,7 +8,9 @@ import org.fc.io.Record;
  * Modello per i dati in memoria all'editor
  */
 
-public class EditorModel extends LinkedList {
+public class EditorModel extends LinkedList<Record> {
+	private static final long serialVersionUID = 1L;
+
 	int maxRecordLength;
 	int maxRecords;
 	EditorModelListener listener = null;

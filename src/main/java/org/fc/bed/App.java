@@ -60,7 +60,7 @@ public class App extends Application {
 	public final static String CMD_VIEW_EBCDIC = "view.ebcdic";
 
 	public final static String CMD_SEARCH_FIND = "search.find";
-	public final static String CMD_SEARCH_PGUP = "search.find.page.up";
+	public final static String CMD_SEARCH_PGUP = "search.find.page.up"; 
 	public final static String CMD_SEARCH_PGDW = "search.find.page.down";
 	public final static String CMD_SEARCH_FIND_NEXT = "search.find.next";
 	public final static String CMD_SEARCH_FIND_PREV = "search.find.prev";

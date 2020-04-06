@@ -108,14 +108,15 @@ public class DataConversionToolkit {
 		}
 	}
 
+	@SuppressWarnings("unchecked")
 	public final static void importDBCS(InputStream is) throws Exception {
 		DataConversionToolkit.backupDefaultCodepage();
 		try {
 			int lineno = 0;
 			BufferedReader f = new BufferedReader(new InputStreamReader(is));
 			String line = null;
-			LinkedList Ascii2Ebcdic = new LinkedList();
-			LinkedList Ebcdic2Ascii = new LinkedList();
+			LinkedList<DbcsItem> Ascii2Ebcdic = new LinkedList<DbcsItem>();
+			LinkedList<DbcsItem> Ebcdic2Ascii = new LinkedList<DbcsItem>();
 
 			LINE: while ((line = f.readLine()) != null) {
 				lineno++;
@@ -157,11 +158,11 @@ public class DataConversionToolkit {
 		}
 	}
 
-	public final static byte[] loadDBCSTable(LinkedList l, boolean source) {
+	public final static byte[] loadDBCSTable(LinkedList<DbcsItem> l, boolean source) {
 		byte[] v = new byte[l.size() * 2];
 		int i = 0;
 		// System.out.println("Table");
-		ListIterator li = l.listIterator();
+		ListIterator<DbcsItem> li = l.listIterator();
 		while (li.hasNext()) {
 			DbcsItem di = (DbcsItem) li.next();
 			String s = (source ? di.getSrc() : di.getDst());

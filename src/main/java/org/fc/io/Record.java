@@ -4,6 +4,7 @@ import org.fc.hdm.ByteArray;
 import org.fc.hdm.DataFormat;
 
 public abstract class Record extends ByteArray {
+	private static final long serialVersionUID = 1L;
 	long recno;
 
 	public Record(byte[] b) {

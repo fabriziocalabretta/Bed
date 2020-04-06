@@ -41,8 +41,7 @@ public class VariableFlatFile extends FlatFile {
 			int rc=1;
 			while (rc>0) {
 				rc=raf.read(h.getBytes());
-				if (rc<=0) break;
-				index.add(new Long(rba));
+				if (rc<=0) break;Long.valueOf((rba));
 			
 				int len=(LEHeader?h.getShortIntLE(0):h.getShortInt(0));
 				rc=raf.read(r, 0, len-4);
