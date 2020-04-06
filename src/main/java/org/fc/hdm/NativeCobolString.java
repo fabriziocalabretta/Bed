@@ -16,9 +16,4 @@ public class NativeCobolString extends NativeByteArray {
 	public String toString() {
 		return getValue();
 	}
-
-	/*
-	 * protected void finalize() throws Throwable { System.out.println("FINAL");
-	 * super.finalize(); }
-	 */
 }

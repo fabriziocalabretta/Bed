@@ -54,7 +54,6 @@ public class EditorModel extends LinkedList<Record> {
 	}
 
 	public void setByte(int x, int y, byte b) {
-		System.out.println("setto a " + x + "," + y);
 		Record r = (Record) get(y);
 		r.set(b, x);
 		dataChanged();
@@ -84,7 +83,6 @@ public class EditorModel extends LinkedList<Record> {
 	}
 
 	void dataChanged() {
-		// System.out.println("data changed");
 		if (listener != null) {
 			listener.dataChanged();
 		}

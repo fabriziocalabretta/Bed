@@ -1,10 +1,13 @@
 package org.fc.io;
 
 import java.io.IOException;
+import java.util.logging.Logger;
 
 import javax.swing.ProgressMonitor;
 
 public abstract class DataFile {
+	protected static Logger logger = Logger.getLogger(DataFile.class.getName());
+	
 	public final static int INPUT_MODE = 0;
 	public final static int OUTPUT_MODE = 1;
 	public final static int INPUT_OUTPUT_MODE = 2;

@@ -263,49 +263,6 @@ public class ByteArray implements GenericByteArray, Serializable, Cloneable {
 		return (super.clone());
 	}
 
-	public static void main(String[] argv) {
-		ByteArray t = new ByteArray(64);
-		double d = 17.9;
-		t.setPacked(d, 34, 4, true, 2);
-		t.dump("-->", t.getBytes(), t.length());
-
-		d = 0;
-		t.setPacked(d, 34, 4, true, 2);
-		t.dump("-->", t.getBytes(), t.length());
-
-		d = -132.567;
-		t.setPacked(d, 34, 4, true, 2);
-		t.dump("-->", t.getBytes(), t.length());
-
-		d = 10.1;
-		t.setPacked(d, 34, 4, true, 2);
-
-		t.dump("-->", t.getBytes(), t.length());
-		System.exit(0);
-		ByteArray b = new ByteArray(32);
-		b.setPacked(123, 0, 2, true);
-		b.setPacked(-123, 2, 2, true);
-		b.setPacked(123, 4, 2, false);
-		b.setZoned(127, 8, 6, false);
-		b.setZoned(127, 14, 6, true);
-		b.setZoned(-127, 20, 6, true);
-		b.dump("--", b.getBytes(), b.length());
-		System.out.println("riletto " + b.getPacked(0, 2));
-		System.out.println("riletto " + b.getPacked(2, 2));
-		System.out.println("riletto " + b.getPacked(4, 2));
-		System.out.println("riletto " + b.getZoned(8, 6));
-		System.out.println("riletto " + b.getZoned(14, 6));
-		System.out.println("riletto " + b.getZoned(20, 6));
-		CobolPacked pk = new CobolPacked(8, true);
-		long l = (long) 3269348234000L;
-		System.out.println("longmax=" + Long.MAX_VALUE);
-		System.out.println("long=" + l);
-		pk.setValue(l);
-		System.out.println(DataFormat.dump(pk.getBytes(), 8));
-		long l2 = pk.getValue();
-		System.out.println("get=" + l2);
-	}
-
 	public void dump(String msg, byte[] b, int l) {
 		ByteArray.dump(System.out, msg, b, l);
 	}

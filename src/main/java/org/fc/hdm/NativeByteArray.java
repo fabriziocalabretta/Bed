@@ -231,7 +231,6 @@ public class NativeByteArray implements GenericByteArray {
 	protected void finalize() throws Throwable {
 		try
 		{
-			System.out.println("finalized");
 			free();
 		} finally {
 			super.finalize();

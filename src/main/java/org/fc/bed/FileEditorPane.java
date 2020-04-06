@@ -138,7 +138,7 @@ public class FileEditorPane extends BorderPane {
 		statusBar.getChildren().add(lRo);
 		statusBar.getChildren().add(lOffset);
 		statusBar.getChildren().add(lInsert);
-
+		statusBar.setSpacing(10);
 		this.setCenter(pview);
 		this.setBottom(statusBar);
 
@@ -174,7 +174,6 @@ public class FileEditorPane extends BorderPane {
 		currentRecordStatus = EXISTING;
 		view.recalculateSize();
 		refresh();
-		System.out.println("open: "+model.size());
 		if (!readOnly && model.size()==0)
 		{
 			insertRecord(false, 1);
@@ -218,7 +217,6 @@ public class FileEditorPane extends BorderPane {
 		if (df == null) {
 			return;
 		}
-		// System.out.println("refresh()");
 		try {
 			releaseCurrentRecord();
 			if (model.size() > 0) {
@@ -235,7 +233,6 @@ public class FileEditorPane extends BorderPane {
 	}
 
 	public void seek(Record b, boolean backward) {
-		// System.out.println("SEEK backward="+backward +" per
 		// "+model.getMaxRecords() );
 		try {
 			df.seek(b.getKey(), DataFile.GTEQ);
@@ -243,7 +240,7 @@ public class FileEditorPane extends BorderPane {
 			try {
 				loadModel(model.getMaxRecords(), backward);
 			} catch (EOFException e) {
-				System.out.println("EOF gestito: " + e);
+				logger.info("EOF gestito: " + e);
 			}
 			view.cursorHome();
 		} catch (IOException e) {
@@ -252,22 +249,19 @@ public class FileEditorPane extends BorderPane {
 	}
 
 	public void scroll(int n, boolean backward) {
-		// System.out.println("SCROLL "+n+ "backward="+backward);
 		try {
 			if (model.size() > 0) {
 				Record b = (Record) (backward ? model.getFirst() : model.getLast());
-				// System.out.println("seek "+b);
 				df.seek(b.getKey(), (backward ? DataFile.GTEQ : DataFile.GREATER));
-				// System.out.println("trovato");
 			}
 			loadModel(n, backward);
 		} catch (EOFException eof) {
 			if (backward) {
-				System.out.println("********** BOF *************");
+				//logger.info("********** BOF *************");
 				beep();
 				// refresh();
 			} else {
-				System.out.println("********** EOF *************");
+				//System.out.println("********** EOF *************");
 				beep();
 			}
 		} catch (IOException e) {
@@ -488,7 +482,6 @@ public class FileEditorPane extends BorderPane {
 
 	public boolean leavingRecord(boolean movingUp) {
 		if (view.isHexMode()) {
-			// System.out.println("--> "+view.getEditArea());
 			if (movingUp) {
 				return (view.getEditArea() == EditorView.AREA_CHAR);
 			} else {
@@ -667,17 +660,8 @@ public class FileEditorPane extends BorderPane {
 		}
 		ByteArray ba;
 
-		// System.out.println("cerco "+(forward?"next":"prev")+" da
-		// riga="+findFromIndex+ " col="+findFromColumn);
-		// System.out.println("range "+findOnRange+" da "+findRangeFrom +" a "
-		// +findRangeTo);
-
 		/** ricerco all'interno della parte visibile */
 		for (int i = findFromIndex; (i >= 0 && i < model.size()); i += direction) {
-			/*
-			 * System.out.println("i="+i); System.out.println("max="+model.size());
-			 * System.out.println("dir="+direction);
-			 */
 			ba = (ByteArray) model.get(i);
 			if (findIgnoreCase) {
 				ba = (ByteArray) ba.toUpperCase();
@@ -689,12 +673,10 @@ public class FileEditorPane extends BorderPane {
 				pos = ba.lastIndexOf(findWhat, findFromColumn);
 			}
 			if (posOnFindRange(pos)) {
-				// System.out.println("trovato ");
 				findArea = new Rectangle(pos, i, findWhat.length(), 1);
 				cursorAtIndex(pos + 1, i);
 				setSelection(findArea);
 				findFromColumn = pos + direction;
-				// System.out.println("truva' "+findFromColumn);
 				return true;
 			}
 			findFromColumn = (forward ? 0 : model.size() - 1);
@@ -719,7 +701,6 @@ public class FileEditorPane extends BorderPane {
 					}
 					int pos = ba.indexOf(findWhat, 0);
 					if (posOnFindRange(pos)) {
-						// System.out.println("trovato ");
 						seek(r, false);
 						findArea = new Rectangle(pos, 0, findWhat.length(), 1);
 						view.cursorOnColumn(pos + 1);
@@ -737,10 +718,8 @@ public class FileEditorPane extends BorderPane {
 			FXDialog.errorBox(parent, e);
 			e.printStackTrace();
 		}
-		System.out.println("NON TROVATO");
 		beep();
 		if (FXDialog.confirmBox(parent, messages.getString("msg.find.not.found"))) {
-			System.out.println("relocate");
 			locateTop();
 			return findOccurrence(forward);
 		}
@@ -928,7 +907,7 @@ public class FileEditorPane extends BorderPane {
 		this.setOnKeyPressed(new EventHandler<KeyEvent>() {
 			@Override
 			public void handle(KeyEvent event) {
-				logger.info("pressed" +event);
+				//logger.info("pressed" +event);
 				switch (event.getCode()) {
 				case LEFT:
 					cursorLeft();
@@ -975,16 +954,17 @@ public class FileEditorPane extends BorderPane {
 		this.setOnKeyTyped(new EventHandler<KeyEvent>() {
 			@Override
 			public void handle(KeyEvent evt) {
-				logger.info("typed "+ evt);
+				//logger.info("typed "+ evt);
 				if (df == null || df.isReadOnly()) {
 					return;
 				}
 				byte b;
 				
 				switch (evt.getCode()) {
+				case TAB: 
 				case ENTER:
 				case BACK_SPACE:
-					logger.info("typed ENTER or BSPC");
+					logger.info("typed ENTER, TAB or BSPC");
 					return;
 				default:
 				}
@@ -994,7 +974,6 @@ public class FileEditorPane extends BorderPane {
 				{
 					return;
 				}
-				// System.out.println("-->"+(int)c);
 				int ea = view.getEditArea();
 				if (ea == EditorView.AREA_CHAR) {
 					b = (byte) c;
@@ -1020,9 +999,8 @@ public class FileEditorPane extends BorderPane {
 			@Override
 			public void handle(MouseEvent evt) {
 				//int m = evt.getModifiers();
-				logger.info("mouse click "+evt);
-				logger.info("click count "+evt.getClickCount());
-				logger.info("still "+evt.isStillSincePress());
+				//logger.info("mouse click "+evt);
+				requestFocus();
 				if (evt.getClickCount() == 1) {
 					selection = null;
 					((App) parent).setMenuState();
@@ -1041,7 +1019,7 @@ public class FileEditorPane extends BorderPane {
 		this.setOnMouseReleased(new EventHandler<MouseEvent>() {
 			@Override
 			public void handle(MouseEvent evt) {
-				logger.info(getClass().getName()+"+mouse released "+evt);
+				//logger.info(getClass().getName()+"+mouse released "+evt);
 				if (selection == null)
 					return;
 				int w = ((int)(evt.getX()) / view.getCharWidth()) - (int) selection.getX() + 1;
@@ -1061,7 +1039,6 @@ public class FileEditorPane extends BorderPane {
 		});
 		
 		this.setOnMouseDragged(new EventHandler<MouseEvent>() {
-			// TODO: fai funzionare la selezione
 			@Override
 			public void handle(MouseEvent evt) {
 				//logger.info(getClass().getName()+"+mouse drag "+evt);
@@ -1111,7 +1088,6 @@ public class FileEditorPane extends BorderPane {
 		});
 		
 		this.setOnScroll(new EventHandler<ScrollEvent>() {
-			// TODO: fai funzionare la selezione
 			@Override
 			public void handle(ScrollEvent evt) {
 				logger.info(getClass().getName()+"+scroll "+evt);

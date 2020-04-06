@@ -66,7 +66,6 @@ public class DataFormat {
 			decimals++;
 		}
 		long l = Long.parseLong(new String(b, 0, bi));
-		// System.out.println("b=["+new String(b,0,bi)+"] l="+l);
 		DataFormat.setPacked(l, bytes, offset, len, signed);
 	}
 

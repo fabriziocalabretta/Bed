@@ -21,10 +21,9 @@ public class VariableFlatFile extends FlatFile {
 	}
 
 	void reopen() throws IOException {
-		System.out.println("opening	: " + getFile());
+		logger.info("opening	: " + getFile());
 		raf = new RandomAccessFile(getFile(), modes[openMode]);
 		setModified(false);
-		System.out.println("length	: " + raf.length());
 		long fileLength = raf.length();
 		// Runtime rt=Runtime.getRuntime();
 		ProgressMonitor pm = getProgressMonitor();
@@ -33,7 +32,7 @@ public class VariableFlatFile extends FlatFile {
 			progressMonitor.setMaximum((int) fileLength );
 			// progressMonitor.setNote("opening");
 		}
-		System.out.println("inizio " + new Date());
+		logger.info("inizio " + new Date());
 		long rba=0;
 		try {
 			ByteArray h=new ByteArray(4);
@@ -56,7 +55,7 @@ public class VariableFlatFile extends FlatFile {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		System.out.println("fine " + new Date());
+		logger.info("fine " + new Date());
 	}
 
 	Record _read(int idx) throws IOException {

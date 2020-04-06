@@ -30,9 +30,4 @@ public class CobolString extends ByteArray {
 	public String toString() {
 		return getValue();
 	}
-
-	/*
-	 * protected void finalize() throws Throwable { System.out.println("FINAL");
-	 * super.finalize(); }
-	 */
 }

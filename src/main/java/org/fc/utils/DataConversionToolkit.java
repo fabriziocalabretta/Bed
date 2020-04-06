@@ -94,9 +94,6 @@ public class DataConversionToolkit {
 					default:
 						throw new Exception("malformed element " + (i + 1) + " at line " + lineno);
 					}
-					System.out.println("e=" + e);
-					System.out.println("v=" + v);
-					System.out.println("idx=" + idx);
 					DataConversionToolkit.EBCDIC_ASCII[idx] = v;
 					DataConversionToolkit.ASCII_EBCDIC[v] = (short) idx;
 					idx++;

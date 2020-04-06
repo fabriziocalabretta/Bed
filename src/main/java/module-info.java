@@ -6,6 +6,7 @@ module org.fc.bed {
     requires javafx.graphics;
     requires javafx.base;
     requires javafx.swing;
+	//requires org.jfxtras.styles.jmetro;
 
     opens org.fc.bed to javafx.fxml;
     exports org.fc.bed;

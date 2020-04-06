@@ -30,6 +30,7 @@ import javafx.scene.control.SeparatorMenuItem;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.control.ToolBar;
+import javafx.scene.control.Tooltip;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
@@ -126,6 +127,7 @@ public class App extends Application {
 	ToggleButton btnToggleRecnum;
 	ToggleButton btnToggleCrossBeam;
 	ResourceBundle messages = null;
+	
 	Logger logger = Logger.getLogger(this.getClass().getName());
 
 	FileEditorPane fe = null;
@@ -150,6 +152,8 @@ public class App extends Application {
 		Scene scene = new Scene(root, 800, 600);
 //		String stylesheet = getClass().getResource("bootstrap3.css").toExternalForm();
 //		scene.getStylesheets().add(stylesheet);
+//		JMetro jMetro = new JMetro(Style.DARK);
+//		jMetro.setScene(scene);
 		setMenuState();
 		primaryStage.setTitle("FileEdit " + PackageInfo.getVersion());
 		primaryStage.setScene(scene);
@@ -345,12 +349,14 @@ public class App extends Application {
 
 	private ButtonBase addTollbarAbstractButton(ToolBar t, String cmd, ButtonBase b) {
 		String res = "graphics/" + cmd + ".png";
+		String tt="tooltip."+cmd;
 		try {
 			ImageView iv = new ImageView(new Image(getClass().getResourceAsStream(res)));
 			iv.setFitWidth(24);
 			iv.setFitHeight(24);
 			b.setGraphic(iv);
-		} catch (Exception e) {
+			b.setTooltip(new Tooltip(messages.getString("toolbar." + cmd)));
+		} catch (Exception e) { 
 			try {
 				b.setText(messages.getString("toolbar." + cmd));
 			} catch (Exception ie) {
@@ -393,7 +399,7 @@ public class App extends Application {
 		btnFileOpenFlat.setDisable(false);
 
 		btnFileSave.setDisable(fileClose);
-		btnFileSaveAs.setDisable(fileClose);
+		btnFileSaveAs.setDisable(true);
 
 		btnEditCut.setDisable(fileClose || noSelection);
 		btnEditCopy.setDisable(fileClose || noSelection);
@@ -442,7 +448,6 @@ public class App extends Application {
 		Optional<OpenFileCommand> result = fc.showAndWait();
 		if (result.isPresent()) {
 			OpenFileCommand r = result.get();
-			System.out.println("apro a " + r.reclen + " ro=" + r.readonly);
 			open(new File(r.filename), r.reclen, r.readonly, r.varlen, r.littleEndian);
 		}
 		setMenuState();
@@ -450,9 +455,7 @@ public class App extends Application {
 
 	public void doSave() {
 		try {
-			System.out.println("doSave()");
 			fe.save();
-			System.out.println("file saved");
 			FXDialog.messageBox(this, messages.getString("msg.file.saved"));
 		} catch (IOException e) {
 			FXDialog.errorBox(e);

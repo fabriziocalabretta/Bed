@@ -99,7 +99,6 @@ public class EditorView extends JPanel implements EditorModelListener {
 
 	public void setKeyInfo(KeyInfo ki) {
 		keyInfo = ki;
-		// System.out.println("SETKEYINFO "+ki);
 	}
 
 	ByteConverter converter;
@@ -118,7 +117,6 @@ public class EditorView extends JPanel implements EditorModelListener {
 		}
 		drawCursor(g, cursorX, cursorY, backgroundColor);
 		if (controller.getSelection() != null) {
-			// System.out.println("Selezione "+selection);
 			g.setXORMode(Color.magenta);
 			g.fillRect((int) (infoCharNumber + controller.getSelection().getX()) * charWidth, (int) controller.getSelection()
 					.getY()
@@ -186,11 +184,9 @@ public class EditorView extends JPanel implements EditorModelListener {
 					len = r.length() - pos;
 					g.setColor(dataColor);
 				}
-				// System.out.println("mando "+start+", "+len);
 				g.drawChars(paintBuffer, start, len, ZERO_X + charWidth * (infoCharNumber + start), (y + 1) * charHeight
 						- charDescent);
 				pos += len;
-				// System.out.println("pos="+pos);
 			}
 		} else {
 			g.setColor(dataColor);
@@ -241,12 +237,9 @@ public class EditorView extends JPanel implements EditorModelListener {
 	}
 
 	public void sizeChanged() {
-		// System.out.println("Size changed ------");
-		// System.out.println("lastidx="+lastIndex);
 		recalculateSize();
 		int l = (lastIndex > 0 ? lastIndex : getCurrentIndex());
 		if (l > model.getMaxRecords()) {
-			// System.out.println("riposiziono a "+(model.getMaxRecords()-1));
 			cursorOnIndex(model.getMaxRecords() - 1);
 		} else {
 			cursorOnIndex(l);

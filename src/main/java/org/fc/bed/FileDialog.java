@@ -41,7 +41,6 @@ public class FileDialog extends Dialog<OpenFileCommand> {
 	CheckBox cbLittleEndian;
 	String fileFilter=null;
 	
-	
 	public FileDialog(ResourceBundle rb)
 	{
 		super();
@@ -95,7 +94,6 @@ public class FileDialog extends Dialog<OpenFileCommand> {
 		content.setTop(hbFn);
 		content.setCenter(browser);
 		content.setRight(info);
-		
 		
 		//String stylesheet = getClass().getResource("DialogPaneDark.css").toExternalForm();
 		//this.getDialogPane().getStylesheets().add(stylesheet);

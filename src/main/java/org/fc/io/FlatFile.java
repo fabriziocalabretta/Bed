@@ -32,8 +32,6 @@ public class FlatFile extends DataFile {
 	/**
 	 * metodi publici
 	 */
-
-
 	public void open(int mode) throws IOException {
 		recordLength = fileInfo.getMaxRecordLength();
 		ioBuffer = new byte[recordLength];
@@ -47,14 +45,14 @@ public class FlatFile extends DataFile {
 			openMode = CLOSED;
 			throw e;
 		}
-		System.out.println("file opened mode=" + mode + " ro=" + isReadOnly());
+		logger.info("file open mode=" + mode + " ro=" + isReadOnly());
 	}
 
 	void reopen() throws IOException {
-		System.out.println("opening	: " + getFile());
+		logger.info("opening	: " + getFile());
 		raf = new RandomAccessFile(getFile(), modes[openMode]);
 		setModified(false);
-		System.out.println("length	: " + raf.length());
+		logger.info("length	: " + raf.length());
 		long fileLength = raf.length();
 		// Runtime rt=Runtime.getRuntime();
 		ProgressMonitor pm = getProgressMonitor();
@@ -63,7 +61,7 @@ public class FlatFile extends DataFile {
 			progressMonitor.setMaximum((int) (fileLength / recordLength));
 			// progressMonitor.setNote("opening");
 		}
-		System.out.println("inizio " + new Date());
+		logger.info("inizio " + new Date());
 		for (long rba = 0; rba < fileLength; rba += recordLength) {
 			if (pm != null) {
 				// progressMonitor.setNote(NumberFormat.getInstance().format(rba)+"
@@ -75,7 +73,7 @@ public class FlatFile extends DataFile {
 			}
 			index.add(Long.valueOf(rba));
 		}
-		System.out.println("fine " + new Date());
+		logger.info("fine " + new Date());
 	}
 
 	public void close() throws IOException {
@@ -140,14 +138,14 @@ public class FlatFile extends DataFile {
 	 * metodi publici astratti
 	 */
 	public Record read(RecordKey k, int mode) throws IOException {
-		// System.out.println("read dir di "+k);
+		// logger.info("read dir di "+k);
 		seek(k, mode);
 		return _read(pointer);
 	}
 
 	public void seek(RecordKey k, int mode) throws IOException {
 		long p = ((RrdsKey) k).getRrn();
-		// System.out.println("seek di "+p+" modo="+mode);
+		// logger.info("seek di "+p+" modo="+mode);
 		if (mode == DataFile.GREATER) {
 			p++;
 		}
@@ -182,9 +180,9 @@ public class FlatFile extends DataFile {
 
 	public void save() throws IOException {
 		setModified(false);
-		System.out.println("SAVE*****+");
+		logger.info("SAVE*****+");
 		String tmp = getFile().toString() + ".jedi";
-		System.out.println("genero tmp :" + tmp);
+		logger.info("genero tmp :" + tmp);
 
 		File f = new File(tmp);
 		FileOutputStream out = new FileOutputStream(f);
@@ -204,26 +202,26 @@ public class FlatFile extends DataFile {
 		}
 		out.close();
 		raf.close();
-		System.out.println("f=" + f);
-		System.out.println("gf=" + getFile());
+		logger.info("f=" + f);
+		logger.info("gf=" + getFile());
 		if (getFile().delete()) {
-			System.out.println("cancellato " + getFile());
+			logger.info("cancellato " + getFile());
 		} else {
-			System.out.println("NON cancellato " + getFile());
+			logger.info("NON cancellato " + getFile());
 		}
-		System.out.println("f=" + f);
-		System.out.println("gf=" + getFile());
+		logger.info("f=" + f);
+		logger.info("gf=" + getFile());
 		if (f.renameTo(getFile())) {
-			System.out.println("RINOMINATO " + f.getAbsolutePath());
+			logger.info("RINOMINATO " + f.getAbsolutePath());
 		} else {
-			System.out.println("NON POSSO RINOMINARE " + f.getAbsolutePath());
+			logger.info("NON POSSO RINOMINARE " + f.getAbsolutePath());
 			throw new IOException("cannot rename " + f + " to " + getFile());
 		}
 		reopen();
 	}
 
 	public void revertChanges() throws IOException {
-		System.out.println("REVERT*****+");
+		logger.info("REVERT*****+");
 		setModified(false);
 		reopen();
 	}
